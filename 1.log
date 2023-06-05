@@ -1,0 +1,11 @@
+jún. 05, 2023 11:01:57 DE. OTP.Main readCustomerData
+SEVERE: Failed to read customer data
+java.io.FileNotFoundException: customer.csv (A rendszer nem találja a megadott fájlt)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:111)
+	at java.base/java.io.FileReader.<init>(FileReader.java:60)
+	at OTP.Main.readCustomerData(Main.java:58)
+	at OTP.Main.main(Main.java:41)
+

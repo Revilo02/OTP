@@ -1,28 +1,26 @@
 package OTP.data;
 
 public class Customer {
-    private int webshopId;
+    private String webshopId;
     //Egyedi a webshopon belül
-    private int customerId;
+    private String customerId;
 
     private String name;
 
     private String Address;
 
-    public Customer(int webshopId, int customerId, String name, String address) {
+    public Customer(String webshopId, String customerId, String name, String address) {
         this.webshopId = webshopId;
         this.customerId = customerId;
         this.name = name;
         Address = address;
     }
 
-    //Gettereket elég generáltatni mivel a feladat nem kéri hogy módosítsunk adatokat ezért nem tettem bele settert
-
-    public int getWebshopId() {
+    public String getWebshopId() {
         return webshopId;
     }
 
-    public int getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 

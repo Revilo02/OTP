@@ -3,8 +3,8 @@ package OTP.data;
 public class Payment {
 
 
-    private int webshopId;
-    private int customerId;
+    private String webshopId;
+    private String customerId;
 
     //Lehetne akár Enumot is létrehozni erre, de mivel nem az volt kikötés elég lesz későbbi részekben lecsekkolni egy if-el hogy a két érték
     private String paymentMethod;
@@ -18,7 +18,7 @@ public class Payment {
     //Kiiratáshoz könnyebb lesz ezzel dolgozni
     private String paymentDate;
 
-    public Payment(int webshopId, int customerId, String paymentMethod, int amount, String bankAccount, String cardNumber, String paymentDate) {
+    public Payment(String webshopId, String customerId, String paymentMethod, int amount, String bankAccount, String cardNumber, String paymentDate) {
         this.webshopId = webshopId;
         this.customerId = customerId;
         this.paymentMethod = paymentMethod;
@@ -28,11 +28,11 @@ public class Payment {
         this.paymentDate = paymentDate;
     }
 
-    public int getWebshopId() {
+    public String getWebshopId() {
         return webshopId;
     }
 
-    public int getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
