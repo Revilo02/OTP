@@ -1,29 +1,14 @@
 package OTP;
 
-import OTP.data.Customer;
-import OTP.data.Payment;
-
-import java.io.IOException;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import OTP.data.*;
+import java.io.*;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
-
 import java.util.logging.SimpleFormatter;
 import java.util.logging.Logger;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 public class Main {
@@ -31,10 +16,13 @@ public class Main {
     private static final String customerData="customer.csv";
     private static final String paymentData="payments.csv";
     private static final String log = "application.log";
+    private static final String report1="Report01.csv";
+    private static final String report2="Report02.csv";
+    private static final String reportTop="Top.csv";
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
 
 
-    //Logger müködtetéséhez itt kell létrehozni!
+    //Logger müködtetéséhez itt kell inicializálni
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     private static List<Customer> customers = new ArrayList<>();
@@ -45,9 +33,10 @@ public class Main {
         Logger();
         readCustomerData();
         readPaymentData();
-        System.out.println("Hello world!");
-        System.out.println(customers.size());
-        System.out.println(payments.size());
+        generateCustomerReport();
+        generateTopCustomersReport();
+        generateWebShopReport();
+
     }
     private static void Logger() {
 
@@ -122,7 +111,7 @@ public class Main {
                     String paymentDateStr = values[6].trim();
 
                     //Validálja hogy a dátum formátuma helyes-e
-                    if (!isCustomerValid(values[0],values[1]) || !isDateValid(paymentDateStr ) ) {
+                   if (!isCustomerValid(values[0],values[1]) || !isDateValid(paymentDateStr ) ) {
                         logger.log(Level.SEVERE, "Invalid data: " + line);
                         continue;
                     }
@@ -150,9 +139,7 @@ public class Main {
             logger.log(Level.SEVERE, "Failed to read payment data", e);
         }
     }
-
-
-
+    //Validálások
     private static boolean isDateValid(String dateString) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
         dateFormat.setLenient(false); // Engedélyezzük a szigorú dátumellenőrzést
@@ -179,5 +166,101 @@ public class Main {
             return false;
         return true;
     }
+
+
+    //Reportok létrehozása
+    private static void generateCustomerReport() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(report1))) {
+            writer.println("NAME;ADDRESS;vásárlás összesen");
+            for (Customer customer : customers) {
+                int totalAmount = getTotalAmountForCustomer(customer.getCustomerId(), customer.getWebshopId());
+                writer.println(customer.getName() + ";" + customer.getAddress() + ";" + totalAmount);
+            }
+            logger.log(Level.INFO, "Customer report generated successfully.");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to generate customer report.", e);
+        }
+    }
+
+    private static int getTotalAmountForCustomer(String customerId, String webshopID ) {
+        int totalAmount = 0;
+        for (Payment payment : payments) {
+            for(Customer customer: customers){
+                if (payment.getCustomerId().equals(customerId) && payment.getWebshopId().equals(webshopID)) {
+                    totalAmount += payment.getAmount();
+                    break;
+                }
+            }
+        }
+        return totalAmount;
+    }
+    private static void generateTopCustomersReport() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(reportTop))) {
+            writer.println("NAME;ADDRESS;vásárlás összesen");
+            List<Customer> sortedCustomers = new ArrayList<>(customers);
+            sortedCustomers.sort(Comparator.comparingInt((Customer c) -> getTotalAmountForCustomer(c.getCustomerId(),c.getWebshopId())).reversed());
+            int count = Math.min(sortedCustomers.size(), 2);
+            for (int i = 0; i < count; i++) {
+                Customer customer = sortedCustomers.get(i);
+                int totalAmount = getTotalAmountForCustomer(customer.getCustomerId(),customer.getWebshopId());
+                writer.println(customer.getName() + ";" + customer.getAddress() + ";" + totalAmount);
+            }
+            logger.log(Level.INFO, "Top customers report generated successfully.");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to generate top customers report.", e);
+        }
+    }
+    private static void generateWebShopReport(){
+        ArrayList<String> webshopNames = new ArrayList<>();
+
+
+        // Az egyes webshopok bevételeinek összesítése
+        for (Payment payment : payments) {
+            String webshopId = payment.getWebshopId();
+
+
+            int index = webshopNames.indexOf(webshopId);
+            if (index == -1) {
+                // A webshop már szerepel a listában, frissítsük a bevételeket
+                webshopNames.add(webshopId);
+
+            }
+        }
+        int [] cardpayments=new int [webshopNames.size()];
+        int [] bankaccountpayments=new int[webshopNames.size()];
+
+        for(int i=0;i< webshopNames.size();i++){
+            cardpayments[i]=0;
+
+            for (int j=0; j<payments.size();j++){
+
+                if(webshopNames.get(i).equals(payments.get(j).getWebshopId())){
+                    if(payments.get(j).getPaymentMethod().equals("transfer")) {
+                        cardpayments[i] += payments.get(j).getAmount();
+
+                    }
+                    else{
+                        bankaccountpayments[i]+=payments.get(j).getAmount();
+
+                    }
+                }
+            }
+        }
+
+
+
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(report2))) {
+            writer.println("WEBSHOP;KÁRTYÁSVÁSÁRLÁSOKOSSZEGE;ÁTUTALÁSOSVÁSÁRLÁSOKOSSZEGE");
+            for(int i=0;i<webshopNames.size();i++){
+                writer.println(webshopNames.get(i)+";"+cardpayments[i]+";"+bankaccountpayments[i]);
+            }
+
+            logger.log(Level.INFO, "Webshop report generated successfully.");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to generate Webshop report.", e);
+        }
+    }
+
 
 }

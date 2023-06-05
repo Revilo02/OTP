@@ -1,10 +1,14 @@
-jún. 05, 2023 1:07:01 DU. OTP.Main readCustomerData
-WARNING: Invalid userid and webshopid pair WS02 A03
-jún. 05, 2023 1:07:01 DU. OTP.Main readPaymentData
+jún. 05, 2023 5:25:27 DU. OTP.Main readPaymentData
 SEVERE: Invalid bank account or card number length: WS02;A01;card;12000;;377947047949679;2021.01.13
-jún. 05, 2023 1:07:01 DU. OTP.Main readPaymentData
+jún. 05, 2023 5:25:27 DU. OTP.Main readPaymentData
 SEVERE: Invalid bank account or card number length: WS01;A02;card;20234;;377947047949679;2021.01.11
-jún. 05, 2023 1:07:01 DU. OTP.Main readPaymentData
+jún. 05, 2023 5:25:27 DU. OTP.Main readPaymentData
 SEVERE: Invalid data: WS01;A03;card;198;;5437588499034201;2021.01.182
-jún. 05, 2023 1:07:01 DU. OTP.Main readPaymentData
+jún. 05, 2023 5:25:27 DU. OTP.Main readPaymentData
 SEVERE: Invalid data: WS02;A04;card;22000;;6757619297057019;2021.01.22
+jún. 05, 2023 5:25:27 DU. OTP.Main generateCustomerReport
+INFO: Customer report generated successfully.
+jún. 05, 2023 5:25:27 DU. OTP.Main generateTopCustomersReport
+INFO: Top customers report generated successfully.
+jún. 05, 2023 5:25:27 DU. OTP.Main generateWebShopReport
+INFO: Webshop report generated successfully.
