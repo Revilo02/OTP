@@ -1,5 +1,7 @@
 package OTP.data;
 
+import java.util.Date;
+
 public class Payment {
 
 
@@ -16,9 +18,9 @@ public class Payment {
     private String cardNumber;
 
     //Kiiratáshoz könnyebb lesz ezzel dolgozni
-    private String paymentDate;
+    private Date paymentDate;
 
-    public Payment(String webshopId, String customerId, String paymentMethod, int amount, String bankAccount, String cardNumber, String paymentDate) {
+    public Payment(String webshopId, String customerId, String paymentMethod, int amount, String bankAccount, String cardNumber, Date paymentDate) {
         this.webshopId = webshopId;
         this.customerId = customerId;
         this.paymentMethod = paymentMethod;
@@ -52,7 +54,7 @@ public class Payment {
         return cardNumber;
     }
 
-    public String getPaymentDate() {
+    public Date getPaymentDate() {
         return paymentDate;
     }
 }
