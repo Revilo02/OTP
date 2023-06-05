@@ -42,7 +42,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //Logger();
+        Logger();
         readCustomerData();
         readPaymentData();
         System.out.println("Hello world!");
@@ -61,6 +61,10 @@ public class Main {
     }
 
 
+    /*
+        Validálni kell azt is hogy egy bolton belül csak egy Id-t állítottak ki
+
+     */
     private static void readCustomerData() {
         try (BufferedReader br = new BufferedReader(new FileReader(customerData))) {
             String line;
@@ -69,15 +73,28 @@ public class Main {
                 String[] values = line.split(";");
                 //System.out.println(values[0]+" "+values[1]+" "+values[2]+" "+values[3]);
                 if (values.length == 4) {
+
                     String webshopId = values[0].trim();
 
                     String customerId = values[1].trim();
                     String name = values[2].trim();
                     String address = values[3].trim();
-                    customers.add(new Customer(webshopId, customerId, name, address));
+                    boolean addAble=true;
+                    for(int i=0;i< customers.size();i++){
+                        if(customers.get(i).getWebshopId().equals(webshopId) && customers.get(i).getCustomerId().equals(customerId)){
+                            logger.log(Level.WARNING, "Invalid userid and webshopid pair "+webshopId+" "+customerId);
+                            addAble=false;
+                                continue;
+                        }
+                    }
+                    if(addAble)
+                        customers.add(new Customer(webshopId, customerId, name, address));
+
                 } else {
                     logger.log(Level.WARNING, "Invalid customer data: " + line);
                 }
+
+
             }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to read customer data", e);
@@ -87,6 +104,7 @@ public class Main {
         Amennyiben jól értem a feladatot itt két dolgot kell validálnunk 1. dátum formátuma megfelelő-e mint az egyik adatsorban látható nincs januárnak 182.napja
         Másik dolog amit fontos csekkolni hogy az adott bolt vevő páros létezik-e
         éppen emiatt kötelező előbb beolvasni a customer.csv-t ha tudni szeretnénk hogy van-e létező vevő a rendeléshez
+        Bankszámla illetve bankártya szám hosszát is validálni kell !
 
      */
     private static void readPaymentData() {
@@ -102,27 +120,30 @@ public class Main {
                     String bankAccount = values[4].trim();
                     String cardNumber = values[5].trim();
                     String paymentDateStr = values[6].trim();
+
                     //Validálja hogy a dátum formátuma helyes-e
-                    if (!isCustomerValid(values[0],values[1])) {
-                        logger.log(Level.WARNING, "Invalid userid and webshopid pair "+webshopId+" "+customerId);
+                    if (!isCustomerValid(values[0],values[1]) || !isDateValid(paymentDateStr ) ) {
+                        logger.log(Level.SEVERE, "Invalid data: " + line);
                         continue;
                     }
-                    if (!isDateValid(paymentDateStr)) {
-                        logger.log(Level.WARNING, "Invalid payment date: " + paymentDateStr);
+                    //Validálja hogy a cardnumber vagy a bankaccount hossza nem egyenlő-e 16-al
+                    if ((bankAccount.length() != 16 && cardNumber.equals("")) || (bankAccount.equals("") && cardNumber.length() != 16)) {
+                        logger.log(Level.SEVERE, "Invalid bank account or card number length: " + line);
                         continue;
                     }
+
                     Date paymentDate;
                     try {
                         paymentDate = dateFormat.parse(values[6].trim());
 
                     } catch (ParseException e) {
-                        logger.log(Level.WARNING, "Invalid payment date format: " + values[6]);
+                        logger.log(Level.SEVERE, "Invalid payment date format: " + values[6]);
                         continue;
                     }
 
                     payments.add(new Payment(webshopId, customerId, paymentMethod, amount, bankAccount, cardNumber, paymentDate));
                 } else {
-                    logger.log(Level.WARNING, "Invalid payment data: " + line);
+                    logger.log(Level.SEVERE, "Invalid payment data: " + line);
                 }
             }
         } catch (IOException e) {
@@ -150,6 +171,13 @@ public class Main {
             }
         }
         return false;
+    }
+    private static boolean isCardNumberValid(String cardnumber, String bankaccount){
+        if(cardnumber.length()!=16  )
+            return false;
+        if(bankaccount.length()!=16)
+            return false;
+        return true;
     }
 
 }

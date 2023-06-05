@@ -1,14 +1,10 @@
-jún. 05, 2023 11:02:48 DE. OTP.Main readCustomerData
-WARNING: Invalid customer data: WS01;A01;Kovács János;Bp. 1192 Kosárfonó u. 18
-jún. 05, 2023 11:02:48 DE. OTP.Main readCustomerData
-WARNING: Invalid customer data: WS01;A02;Kiss István;Bp. 1149 Vizafogó u. 11
-jún. 05, 2023 11:02:48 DE. OTP.Main readCustomerData
-WARNING: Invalid customer data: WS02;A02;Pézsma Réka;Vecsés 2221 Káposzta u. 22
-jún. 05, 2023 11:02:48 DE. OTP.Main readCustomerData
-WARNING: Invalid customer data: WS02;A01;Nagy Ferenc;Bp. 1191 Toldi u. 7
-jún. 05, 2023 11:02:48 DE. OTP.Main readCustomerData
-WARNING: Invalid customer data: WS01;A04;Hagyma Piroska;Bp. 1117 Tűzkő u. 48
-jún. 05, 2023 11:02:48 DE. OTP.Main readCustomerData
-WARNING: Invalid customer data: WS01;A03;Nagy Natália;Bp. 1211 Lövölde tér 2
-jún. 05, 2023 11:02:48 DE. OTP.Main readCustomerData
-WARNING: Invalid customer data: WS02;A03;Szabó Béla;Bp. 1027 Boldog u. 74
+jún. 05, 2023 1:07:01 DU. OTP.Main readCustomerData
+WARNING: Invalid userid and webshopid pair WS02 A03
+jún. 05, 2023 1:07:01 DU. OTP.Main readPaymentData
+SEVERE: Invalid bank account or card number length: WS02;A01;card;12000;;377947047949679;2021.01.13
+jún. 05, 2023 1:07:01 DU. OTP.Main readPaymentData
+SEVERE: Invalid bank account or card number length: WS01;A02;card;20234;;377947047949679;2021.01.11
+jún. 05, 2023 1:07:01 DU. OTP.Main readPaymentData
+SEVERE: Invalid data: WS01;A03;card;198;;5437588499034201;2021.01.182
+jún. 05, 2023 1:07:01 DU. OTP.Main readPaymentData
+SEVERE: Invalid data: WS02;A04;card;22000;;6757619297057019;2021.01.22
